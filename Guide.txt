@@ -1,0 +1,11 @@
+fix log
+fix cloudlet complete, cancel, fail sensors
+run
+move sensors to monitor?
+add triple contradictort act an dec
+
+remove totalCloudletsCanceled
+
+getMonitor().doMonitoring();
+                    
+                    getExecutor().remainedCoolDownTime -= Const.aMinute;

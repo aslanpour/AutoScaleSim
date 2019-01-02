@@ -1,0 +1,10 @@
+/*
+ * Title:        AutoScaleSim Toolkit
+ * Description:  AutoScaleSim (Auto-Scaling Simulation) Toolkit for Modeling and Simulation of Auto-scaling Systems
+ *		 for Cloud Applications 			
+ *
+ * Copyright (c) 2018 Islamic Azad University, Jahrom
+ *
+ * Authors: Mohammad Sadegh Aslanpour
+ * 
+ */
