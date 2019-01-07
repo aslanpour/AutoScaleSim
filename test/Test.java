@@ -3,6 +3,7 @@ import static autoscalesim.log.AutoScaleSimTags.twoTabs;
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 import org.cloudbus.cloudsim.Log;
 
+
 /*
  * Title:        AutoScaleSim Toolkit
  * Description:  AutoScaleSim (Auto-Scaling Simulation) Toolkit for Modeling and Simulation of Auto-scaling Systems
@@ -24,6 +25,7 @@ public class Test {
         MA,
         WMA;
     }
+    Assert  assert = new AssertionError();
     public static void main(String[] args) {
         String myMeth = method.SIMPLE.name();
         myMeth = myMeth;
