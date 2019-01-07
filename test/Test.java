@@ -25,7 +25,6 @@ public class Test {
         MA,
         WMA;
     }
-    Assert  assert = new AssertionError();
     public static void main(String[] args) {
         String myMeth = method.SIMPLE.name();
         myMeth = myMeth;
