@@ -138,7 +138,7 @@ public class ApplicationProvider extends SimEntity {
         public static List<? extends Cloudlet> cloudletFailedList;
         
         // Initialing Settings
-        private final String[] ExperimentalReportItemList;
+        private final String[] ITEMS_TO_REPORT_LIST;
 
         /**
          * 
@@ -153,7 +153,7 @@ public class ApplicationProvider extends SimEntity {
          * @param analyzer
          * @param planner
          * @param executor
-         * @param ExperimentalReportItemList
+         * @param ITEMS_TO_REPORT_LIST
          * @throws Exception 
          */
         public ApplicationProvider(String name,
@@ -167,7 +167,7 @@ public class ApplicationProvider extends SimEntity {
                                         Analyzer analyzer,
                                         Planner planner,
                                         Executor executor,
-                                        final String[] ExperimentalReportItemList) throws Exception {
+                                        final String[] ITEMS_TO_REPORT_LIST) throws Exception {
             super(name);
             
             
@@ -210,7 +210,7 @@ public class ApplicationProvider extends SimEntity {
             getExecutor().setApplicationProviderId(getId());
             
             // AP
-            this.ExperimentalReportItemList = ExperimentalReportItemList;
+            this.ITEMS_TO_REPORT_LIST = ITEMS_TO_REPORT_LIST;
             
             // Vm
             setCloudletSchedulerName(cloudletSchedulerName);
@@ -302,7 +302,7 @@ public class ApplicationProvider extends SimEntity {
                         break;
                 case AutoScaleSimTags.ASP_FINISH:
                         ExperimentalResult.showResultsInConsole();
-                        ExperimentalResult.printReportsToExcel(ExperimentalReportItemList);
+                        ExperimentalResult.printReportsToExcel(ITEMS_TO_REPORT_LIST);
                         clearDatacenters();         
                         finishSimulation();
                         break;

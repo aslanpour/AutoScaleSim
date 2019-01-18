@@ -1,23 +1,9 @@
 
+import autoscalesim.applicationprovider.autoscaling.knowledgebase.MonitorVmHistory;
 import static autoscalesim.log.AutoScaleSimTags.twoTabs;
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 import org.cloudbus.cloudsim.Log;
 
-
-/*
- * Title:        AutoScaleSim Toolkit
- * Description:  AutoScaleSim (Auto-Scaling Simulation) Toolkit for Modeling and Simulation of Auto-scaling Systems
- *		 for Cloud Applications 			
- *
- * Copyright (c) 2018 Islamic Azad University, Jahrom
- *
- * Authors: Mohammad Sadegh Aslanpour
- * 
- */
-/**
- *
- * @author Sadegh-Pc
- */
 public class Test {
     
     enum method {
@@ -26,6 +12,18 @@ public class Test {
         WMA;
     }
     public static void main(String[] args) {
+        String dd = "4.5";
+        
+        MonitorVmHistory vmHistory = new MonitorVmHistory(1, 2, 3, 4, 5, 6, 7, new int[]{1,2}, new int[]{1,2}, 10);
+        vmHistory.setCpuUtilizationByAllTier(4);
+        vmHistory.setCpuLoadByAllTier(5);
+        vmHistory.setVms(6);
+        vmHistory.setInitialingVms(7);
+        vmHistory.setRunningVms(8);
+        vmHistory.setQuarantinedVms(9);
+        vmHistory.setRunningCloudlet(10);
+        vmHistory.setThroughputFinishedCloudletsAllTiers(11);  
+        
         String myMeth = method.SIMPLE.name();
         myMeth = myMeth;
           

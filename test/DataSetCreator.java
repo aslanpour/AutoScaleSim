@@ -5,7 +5,7 @@
  */
 
 
-import autoscalesim.applicationprovider.autoscaling.MLP;
+
 import autoscalesim.log.ReadWriteExcel;
 import java.util.ArrayList;
 import org.cloudbus.cloudsim.Log;
@@ -178,9 +178,9 @@ public class DataSetCreator {
             
             for(int j = 0; j < data.size(); j++){
                 if (j < inputCount)
-                    input[j] = MLP.normalizedValue(data.get(j), inputMinValues[j], inputMaxValues[j]);
+                    input[j] = normalizedValue(data.get(j), inputMinValues[j], inputMaxValues[j]);
                 else
-                    output[j - inputCount] = MLP.normalizedValue(data.get(j), outputMinValues[j-inputCount]
+                    output[j - inputCount] = normalizedValue(data.get(j), outputMinValues[j-inputCount]
                                                                              , outputMaxValues[j-inputCount]);
             }
             
@@ -193,5 +193,27 @@ public class DataSetCreator {
             dataSet.saveAsTxt(filePath + fileName + ".txt", ",");
             Log.printLine("data set (txt) has been created in " + filePath + fileName);
         }
+    }
+    
+    /**
+     * 
+     * @param input
+     * @param minInput
+     * @param maxInput
+     * @return 
+     */
+    public static double normalizedValue(double input, double minInput, double maxInput) {
+            return (input - minInput) / (maxInput - minInput) * 0.8 + 0.1;
+    }
+
+    /**
+     * 
+     * @param input
+     * @param minInput
+     * @param maxInput
+     * @return 
+     */
+    public static double deNormalizedValue(double input, double minInput, double maxInput) {
+            return (input - 0.1) * ( maxInput - minInput) / 0.8 + minInput;
     }
 }

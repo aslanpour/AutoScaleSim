@@ -15,28 +15,20 @@ import autoscalesim.applicationprovider.autoscaling.knowledgebase.MonitorEndUser
 import autoscalesim.applicationprovider.autoscaling.knowledgebase.MonitorVmHistory;
 import autoscalesim.applicationprovider.autoscaling.knowledgebase.MonitorSLAHistory;
 import autoscalesim.applicationprovider.autoscaling.knowledgebase.AnalyzerHistory;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFSheetConditionalFormatting;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
-import org.neuroph.core.data.DataSet;
-import org.neuroph.core.data.DataSetRow;
 import autoscalesim.applicationprovider.autoscaling.knowledgebase.PlannerHistory;
 
 /**
@@ -711,5 +703,5 @@ public class ReadWriteExcel {
     public static void setFilePath(String filePath){
         FILE_PATH = filePath;
     }
-  
+    
 }

@@ -197,7 +197,7 @@ public class ExperimentalSetup {
             // "ANALYZER"   which is the report of Analyzer results
             // "PLANNER"    which is the report of Planner results
             // "EXECUTOR"   which is the result of Executor results
-            String[] reports = new String[]{"", "", "","", ""}; 
+            final String[] reports = new String[]{"", "", "","", "", ""}; 
             
 
 //****************************************** Experimental Setup Finished *******************************
