@@ -103,27 +103,27 @@ public class ExperimentalResult {
          * 
          * @param ExperimentalReportItemList 
          */
-        public static void printReportsToExcel(String[] ITEMS_TO_REPORT_LIST){
+        public static void printReports(String[] ITEMS_TO_REPORT_LIST){
             // Write to CSV file
             for (String reportWhat : ITEMS_TO_REPORT_LIST) {
                 switch(reportWhat){
                 case "null":break;
-                case "M_VM":    ReadWriteExcel.writeVmHistoryList(getMonitor().getVmHistoryList());
+                case "M_VM":    //ReadWriteExcel.writeVmHistoryList(getMonitor().getVmHistoryList());
                                 ReadWriteCSV.writeVmHistoryList(getMonitor().getVmHistoryList());break;
                     
-                case "M_SLA":   ReadWriteExcel.writeSLAHistoryList(getMonitor().getSLAHistoryList());
+                case "M_SLA":   //ReadWriteExcel.writeSLAHistoryList(getMonitor().getSLAHistoryList());
                                 ReadWriteCSV.writeSLAHistoryList(getMonitor().getSLAHistoryList());break;
                     
-                case "M_User":  ReadWriteExcel.writeEndUserHistoryList(getMonitor().getEndUserHistoryList());
+                case "M_User":  //ReadWriteExcel.writeEndUserHistoryList(getMonitor().getEndUserHistoryList());
                                 ReadWriteCSV.writeEndUserHistoryList(getMonitor().getEndUserHistoryList());break;
                     
-                case "ANALYZER":ReadWriteExcel.writeAnalyzerHistoryList(getAnalyzer().getHistoryList());
+                case "ANALYZER"://ReadWriteExcel.writeAnalyzerHistoryList(getAnalyzer().getHistoryList());
                                 ReadWriteCSV.writeAnalyzerHistoryList(getAnalyzer().getHistoryList());break;
                     
-                case "PLANNER": ReadWriteExcel.writePlannerHistoryList(getPlanner().getHistoryList());
+                case "PLANNER": //ReadWriteExcel.writePlannerHistoryList(getPlanner().getHistoryList());
                                 ReadWriteCSV.writePlannerHistoryList(getPlanner().getHistoryList());break;
                     
-                case "EXECUTOR":ReadWriteExcel.writeExecutorHistoryList(getExecutor().getHistoryList());
+                case "EXECUTOR"://ReadWriteExcel.writeExecutorHistoryList(getExecutor().getHistoryList());
                                 ReadWriteCSV.writeExecutorHistoryList(getExecutor().getHistoryList());break;
                 default:
                     break;

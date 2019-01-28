@@ -108,7 +108,7 @@ public class ExperimentalSetup {
                 Method.SIMPLE.name(),//[1] method for analyzing 'Vm count' parameter
                 Method.SIMPLE.name(),//[2] method for analyzing 'Throughput' parameter
                 Method.SIMPLE.name(),//[3] method for analyzing 'Response Time' parameter
-                Method.COMPLEX_WMAfibo.name(),//[4] method for analyzing 'Delay time' parameter
+                Method.SIMPLE.name(),//[4] method for analyzing 'Delay time' parameter
                 Method.SIMPLE.name(),//[5] method for analyzing 'SLA violation Count' parameter
                 Method.SIMPLE.name(),//[6] method for analyzing 'SLA violation percent parameter'
                 Method.SIMPLE.name(),//[7] method for analyzing 'SLA violation time' parameter
@@ -141,10 +141,10 @@ public class ExperimentalSetup {
                                             delayTimeScaleUpThreshold,
                                             delayTimeScaleDownThreshold);
         /* Executor */
-            final ExecutorType executorType = ExecutorType.SIMPLE;
+            final ExecutorType executorType = ExecutorType.SUPREX;
             
             
-            final SurplusVMSelectionPolicy surplusVMSelectionPolicy = SurplusVMSelectionPolicy.THE_OLDEST; //?????
+            final SurplusVMSelectionPolicy surplusVMSelectionPolicy = SurplusVMSelectionPolicy.COST_AWARE_PROFESSIONAL; //?????
 //            String surplusVMSelectionPolicy = "theOldest"; 
             
             /* Cool-down time (in minute) to prevent executor from contradictory actions. */

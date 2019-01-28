@@ -302,7 +302,7 @@ public class ApplicationProvider extends SimEntity {
                         break;
                 case AutoScaleSimTags.ASP_FINISH:
                         ExperimentalResult.showResultsInConsole();
-                        ExperimentalResult.printReportsToExcel(ITEMS_TO_REPORT_LIST);
+                        ExperimentalResult.printReports(ITEMS_TO_REPORT_LIST);
                         clearDatacenters();         
                         finishSimulation();
                         break;

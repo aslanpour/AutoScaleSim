@@ -100,10 +100,10 @@ public class SurplusVmSelection {
         double oldest = Double.MAX_VALUE;
 
         for(Vm vm: condidateVmList){
-                if(vm.getRequestTime() < oldest && !exceptList.contains(vm.getId())){
-                    oldest = vm.getRequestTime();
-                    selectedvm = vm;
-                }
+            if(vm.getRequestTime() < oldest && !exceptList.contains(vm.getId())){
+                oldest = vm.getRequestTime();
+                selectedvm = vm;
+            }
         }
         return selectedvm;
     }
