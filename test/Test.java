@@ -12,6 +12,18 @@ public class Test {
         WMA;
     }
     public static void main(String[] args) {
+        
+        Percentile pct = new Percentile();
+        double arr2[] = new double[]{1.0, 19.0, 8.0, 2.5, 14.0, 14.0, 10.0};
+        pct.setData(arr2);
+        
+        System.out.println("pc = " +pct.evaluate());
+        System.out.println("pc50 = " +pct.evaluate(50));
+        System.out.println("pcQ = " +pct.getQuantile());
+        System.out.println("pc100 = " +pct.evaluate(100));
+        pct.setQuantile(100);
+        System.out.println("pcQNew = " +pct.getQuantile());
+        System.out.println("pc = " +pct.evaluate(arr2, 0, 3, 50));
         String dd = "4.5";
         
         MonitorVmHistory vmHistory = new MonitorVmHistory(1, 2, 3, 4, 5, 6, 7, new int[]{1,2}, new int[]{1,2}, 10);
