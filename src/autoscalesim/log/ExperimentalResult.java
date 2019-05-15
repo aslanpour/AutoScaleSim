@@ -340,7 +340,8 @@ public class ExperimentalResult {
                 + "  90th=" + dft.format(pctl.evaluate(90.0))
                 + "  95th = " + dft.format(pctl.evaluate(95.0))
                 + "  99th = " + dft.format(pctl.evaluate(99.0))
-                + "  99.9th = " + dft.format(pctl.evaluate(99.9)));
+                + "  99.9th = " + dft.format(pctl.evaluate(99.9))
+                + "  99.99th = " + dft.format(pctl.evaluate(99.99)));
     }
     
     private static void reportSLACancelCloudlet(){
