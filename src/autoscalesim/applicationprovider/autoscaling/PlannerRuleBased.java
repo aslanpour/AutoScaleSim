@@ -97,6 +97,7 @@ public class PlannerRuleBased extends Planner{
             default:
                 errorChecker = true;
                 error += "Planner class, scaling Rule not found";
+                Log.printLine("Planner class, scaling Rule not found");
         }
 
         // Saving PlannerRuleBased results in its History

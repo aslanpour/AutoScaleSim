@@ -372,8 +372,8 @@ public class ApplicationProvider extends SimEntity {
                     break;
                 default:
                     errorChecker = true; 
-                    error = "Load Manager received en event with unknown Data";
-                    
+                    error+= "Load Manager received en event with unknown Data";
+                    Log.printLine("Load Manager received en event with unknown Data");
                     break;
             }
         }
@@ -569,6 +569,7 @@ public class ApplicationProvider extends SimEntity {
                     if(surplusVm.getStartTime() == -1){
                         Log.printLine("error-scaling down - selected vm is not in  started status");
                         errorChecker = true;
+                        error ="error-scaling down - selected vm is not in  started status";
                     }
                     surplusVm.setStatus(Vm.Destroyed);
                     surplusVm.setDestroyTime(CloudSim.clock());
@@ -753,6 +754,7 @@ public class ApplicationProvider extends SimEntity {
                     // all datacenters already queried
                     Log.printLine(DateTime.timeStamp()+ "Process Vm Create: Error: Some Vms Didn't Start");
                     errorChecker= true;
+                    error+= "Process Vm Create: Error: Some Vms Didn't Start";
                 }
             }
 	}
@@ -830,6 +832,7 @@ public class ApplicationProvider extends SimEntity {
             if (VmList.getById(vmList, cloudlet.getVmId()) == null){
                 Log.print("error- its vm has been destroyed before");
                 errorChecker=true;
+                Log.printLine("error- its vm has been destroyed before");
                 return;
             }
             
@@ -840,6 +843,7 @@ public class ApplicationProvider extends SimEntity {
             if(cloudlet.getNumberOfPes() > vmPEs){
                 errorChecker = true;
                 error += "--cloudletReturn - cloudlet pes was bigger than vm's";
+                Log.printLine("--cloudletReturn - cloudlet pes was bigger than vm's");
             }
             // Set Finish Time
                 // Has already been set. 
@@ -935,6 +939,7 @@ public class ApplicationProvider extends SimEntity {
             if (VmList.getById(vmList, failedCloudlet.getVmId()) == null){
                 Log.print("error- its vm has been destroyed before");
                 errorChecker=true;
+                error+="error- its vm has been destroyed before";
                 return;
             }
             
@@ -946,6 +951,7 @@ public class ApplicationProvider extends SimEntity {
             if(failedCloudlet.getNumberOfPes() > vmPEs){
                 errorChecker = true;
                 error += "--cloudletReturn - cloudlet pes was bigger than vm pes";
+                Log.printLine("--cloudletReturn - cloudlet pes was bigger than vm pes");
             }
             // Set Response Time
             failedCloudlet.setResponseTime(CloudSim.clock() - failedCloudlet.getFirstSubmissionTime());
@@ -1028,12 +1034,14 @@ public class ApplicationProvider extends SimEntity {
 		if (ev == null) {
 			Log.printLine(getName() + ".processOtherEvent(): " + "Error - an event is null.");
                         errorChecker=true;
+                        error+=getName() + ".processOtherEvent(): " + "Error - an event is null.";
 			return;
 		}
 
 		Log.printLine(getName() + ".processOtherEvent(): "
 				+ "Error - event unknown by this ASP.");
                 errorChecker=true;
+                error+=getName() + ".processOtherEvent(): Error - event unknown by this ASP.";
 	}
 
 	

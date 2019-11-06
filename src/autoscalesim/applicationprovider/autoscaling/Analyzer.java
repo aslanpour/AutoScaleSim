@@ -20,6 +20,7 @@ import autoscalesim.applicationprovider.autoscaling.knowledgebase.MonitorVmHisto
 import static autoscalesim.log.ExperimentalResult.error;
 import static autoscalesim.log.ExperimentalResult.errorChecker;;
 import java.util.ArrayList;
+import org.cloudbus.cloudsim.Log;
 /**
  * Analyzer class is the second phase of auto-scaling, where the monitored parameters are analyzed.
  * Its Inputs are a collection of monitored parameters regarding resources, SLA and user's behavior
@@ -169,6 +170,7 @@ public class Analyzer {
             default:
                 errorChecker = true;
                 error += "Error in Analyzer class- resource aware analayzer - cpu utilization analysis method not found";
+                Log.printLine("Error in Analyzer class- resource aware analayzer - cpu utilization analysis method not found");
         }
         
         return analyzedCPUUtilization;
@@ -223,6 +225,7 @@ public class Analyzer {
             default:
                 errorChecker = true;
                 error += "Error in Analyzer class- resource aware analayzer - VM count analysis method not found";
+                Log.printLine("Error in Analyzer class- resource aware analayzer - VM count analysis method not found");
         }
         
         return analyzedVmCount;
@@ -277,6 +280,7 @@ public class Analyzer {
             default:
                 errorChecker = true;
                 error += "Error in Analyzer class- resource aware analayzer - Throughout analysis method not found";
+                Log.printLine("Error in Analyzer class- resource aware analayzer - Throughout analysis method not found");
         }
         return analyzedThroughput;
     }
@@ -331,6 +335,7 @@ public class Analyzer {
             default:
                 errorChecker = true;
                 error += "Error in Analyzer class- resource aware analayzer - Response Time analysis method not found";
+                Log.printLine("Error in Analyzer class- resource aware analayzer - Response Time analysis method not found");
         }
         return analyzedResponseTime;
     }
@@ -385,6 +390,7 @@ public class Analyzer {
             default:
                 errorChecker = true;
                 error += "Error in Analyzer class- resource aware analayzer - Delay Time analysis method not found";
+                Log.printLine("Error in Analyzer class- resource aware analayzer - Delay Time analysis method not found");
         }
         return analyzedDelayTime;
     }
@@ -439,6 +445,7 @@ public class Analyzer {
             default:
                 errorChecker = true;
                 error += "Error in Analyzer class- resource aware analayzer - SLA Violation Count analysis method not found";
+                Log.printLine("Error in Analyzer class- resource aware analayzer - SLA Violation Count analysis method not found");
         }
         
         return analyzedSLAVCount;
@@ -494,6 +501,7 @@ public class Analyzer {
             default:
                 errorChecker = true;
                 error += "Error in Analyzer class- resource aware analayzer - SLA Violation Percent analysis method not found";
+                Log.printLine("Error in Analyzer class- resource aware analayzer - SLA Violation Percent analysis method not found");
         }
         return analyzedSLAVPercentage;
     }
@@ -548,6 +556,7 @@ public class Analyzer {
             default:
                 errorChecker = true;
                 error += "Error in Analyzer class- resource aware analayzer - SLA Violation Time analysis method not found";
+                Log.printLine("Error in Analyzer class- resource aware analayzer - SLA Violation Time analysis method not found");
         }
         
         return analyzedSLAVTime;
@@ -603,6 +612,7 @@ public class Analyzer {
             default:
                 errorChecker = true;
                 error += "Error in Analyzer class- resource aware analayzer - Failed Cloudlet analysis method not found";
+                Log.printLine("Error in Analyzer class- resource aware analayzer - Failed Cloudlet analysis method not found");
         }
         
         return analyzedFailedCloudlet;
@@ -657,6 +667,7 @@ public class Analyzer {
             default:
                 errorChecker = true;
                 error += "Error in Analyzer class- resource aware analayzer - Future Workload analysis method not found";
+                Log.printLine("Error in Analyzer class- resource aware analayzer - Future Workload analysis method not found");
         }
         return analyzedFutureWorkload;
     }

@@ -220,13 +220,20 @@ public class ExperimentalResult {
             for(Vm vm : getOnDemandVmsList()){
                 avgLifeTime += vm.getLifeTime();
             }
-            //in second
-            avgLifeTime /= getOnDemandVmsList().size();
+            
+            if(avgLifeTime!=0){// to avoid divided by zero
+                //in second
+                avgLifeTime /= getOnDemandVmsList().size();
+            }
+            
             // in minute
-            double availableMinutes = (int)(avgLifeTime / (double) AutoScaleSimTags.aMinute);
-            availableMinutes  += (avgLifeTime % 60) / 100;
-            Log.printLine(twoTabs + "VMs Life Time (min.): " + dft.format(avgLifeTime) +"  " 
-                        + dft.format(availableMinutes));
+            double availableMinutes = 0;
+            if(avgLifeTime !=0){// to avoid divided by zero
+                availableMinutes = (int)(avgLifeTime / (double) AutoScaleSimTags.aMinute);
+                availableMinutes  += (avgLifeTime % 60) / 100;
+            }
+            
+            Log.printLine(twoTabs + "VMs Life Time (min.): " + dft.format(availableMinutes));
             
             Log.printLine(twoTabs + "Max used Vms: " + maxVm);
             
@@ -337,6 +344,7 @@ public class ExperimentalResult {
         
         Log.printLine(twoTabs + "Tail Latency (percentile): " 
                 + "  50th=" + dft.format(pctl.evaluate(50.0))
+                + "  75th = " + dft.format(pctl.evaluate(75))
                 + "  90th=" + dft.format(pctl.evaluate(90.0))
                 + "  95th = " + dft.format(pctl.evaluate(95.0))
                 + "  99th = " + dft.format(pctl.evaluate(99.0))
@@ -423,6 +431,7 @@ public class ExperimentalResult {
         if(totalReqAlltiers != totalCloudletReceived){
             error += "reporter - total received request and logged are not match";
             errorChecker = true;
+            Log.printLine("reporter - total received request and logged are not match");
         }
     }
     
@@ -635,12 +644,19 @@ public class ExperimentalResult {
 
                 /* set life time for remined vms */ 
                 double availableSecond = vm.getDestroyTime() - vm.getRequestTime();
+                //If the VM was requested and destroyed at the latest time of simulation
+                if (availableSecond == 0 && vm.getRequestTime()>0 && vm.getDestroyTime()>0)
+                    availableSecond=1;
+                
                 vm.setLifeTime(availableSecond);
             }
             
             for(Vm vm : getOnDemandVmsList()){
-                if(vm.getLifeTime() == 0)
-                    errorChecker = true;
+                if(vm.getLifeTime() == 0){
+                errorChecker = true;
+                error+="error-setRemainedVmsBill";
+                Log.printLine("error-setRemainedVmsBill");
+                }
             }
         }
 }

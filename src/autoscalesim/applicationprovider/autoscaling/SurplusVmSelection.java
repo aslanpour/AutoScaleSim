@@ -61,6 +61,7 @@ public class SurplusVmSelection {
             default:
                 errorChecker = true;
                 error += "Error in Analyzer class- resource aware analayzer - surplus Vm selection policy was not found";
+                Log.printLine("Error in Analyzer class- resource aware analayzer - surplus Vm selection policy was not found");
                 break;
         }
         

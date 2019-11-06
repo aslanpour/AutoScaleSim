@@ -568,7 +568,7 @@ public class CloudSim {
 	 * Internal method used to stop the simulation. This method should <b>not</b> be used directly.
 	 */
 	public static void runStop() {
-		printMessage("Simulation completed.");
+            System.out.print("Simulation completed.");
 	}
 
 	/**

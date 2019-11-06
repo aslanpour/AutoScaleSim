@@ -34,7 +34,7 @@ import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 import org.neuroph.core.NeuralNetwork;
-import org.neuroph.core.data.DataSet;
+import org.neuroph.core.data.DataSet; 
 import autoscalesim.applicationprovider.loadmanager.LoadBalancingRoundRobin;
 import autoscalesim.applicationprovider.loadmanager.LoadBalancing;
 import autoscalesim.applicationprovider.autoscaling.Monitor;
@@ -92,7 +92,7 @@ public class ExperimentalSetup {
            int initialVMs = 2; 
 
            /* The frequency of auto-scaling resources, in minute */
-            int scalingInterval = 10;  
+            int scalingInterval = 3;  
 
             /* Acceptable delay time for the execution of a cloudlet. 
             If a cloudlet delay time went beyond this value, an SLA violation has happened */
@@ -117,7 +117,7 @@ public class ExperimentalSetup {
                     
             /*Alpha in single exponential smoothing, each index is for one analyzing parameter,
             e.g., [0] is for CPU util. */
-            double sESAlpha[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
+            double sESAlpha[] = {0.2, 0, 0, 0, 0.2, 0, 0, 0, 0, 0}; 
            
             //How many monitored items of a parameter should be used to analyze by complex methods?
             int timeWindow = scalingInterval;  
@@ -126,11 +126,11 @@ public class ExperimentalSetup {
             
         /* Planner (resource estimation, capacity planning, or decision making) */
             /* As a Rule-Based planner containing some rules is implemented, */
-            final ScalingRule rule = ScalingRule.SLA_AWARE;
+            final ScalingRule rule = ScalingRule.HYBRID;
 
             /*Thresholds for some parameters */
             double cpuScaleUpThreshold = 70; // percentage      
-            double cpuScaleDownThreshold = 40; // percentage     
+            double cpuScaleDownThreshold = 30; // percentage     
             double delayTimeScaleUpThreshold = 1.0; // second               
             double delayTimeScaleDownThreshold = 0.2;  // second               
             
@@ -141,20 +141,19 @@ public class ExperimentalSetup {
                                             delayTimeScaleUpThreshold,
                                             delayTimeScaleDownThreshold);
         /* Executor */
-            final ExecutorType executorType = ExecutorType.SUPREX;
-            
-            
-            final SurplusVMSelectionPolicy surplusVMSelectionPolicy = SurplusVMSelectionPolicy.COST_AWARE_PROFESSIONAL; //?????
+            final ExecutorType executorType = ExecutorType.SIMPLE;
+                        
+            final SurplusVMSelectionPolicy surplusVMSelectionPolicy = SurplusVMSelectionPolicy.THE_OLDEST; //?????
 //            String surplusVMSelectionPolicy = "theOldest"; 
             
             /* Cool-down time (in minute) to prevent executor from contradictory actions. */
-            final int COOLDOWN = 0;
+            final int COOLDOWN = 0 * AutoScaleSimTags.aMinute;
             
             /* Max. On-Demand VM which Executor is allowed to provision. */
             final int onDemandVmLimit = 40;
             
             
-
+          
             
             
 //*****************************************************************************************************
@@ -167,7 +166,7 @@ public class ExperimentalSetup {
         // "Dynamic" which is related to OS, Time of the day, Server Location, the number of requested instances, etc.
             String startUpDelayType = "Static"; 
             
-            /* basic value for instantiaion delay time of VMs */
+            /* basic value for instantiaion delay time of VMs should be at least 1 minute */
             final double BASE_DELAY_IN_VM_START_UP = 5 * AutoScaleSimTags.aMinute;
             
             Executor executor = new ExecutorSimple(

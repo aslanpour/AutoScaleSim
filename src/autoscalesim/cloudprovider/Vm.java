@@ -27,22 +27,22 @@ public class Vm {
 
 //        my code
         /* The Vm Statuses */
-        public static final int Requested = 0;  // مشخص می کند که ماشین درخواست شده
-        public static final int Started = 1;    // مشخص می کند که ماشین شروع به کار کرده
+        public static final int Requested = 0; 
+        public static final int Started = 1;  
         public static final int Quarantined = 2;
-        public static final int Destroyed = 3;  // مشخص می کند که ماشین ازادسازی یا تخریب شده
+        public static final int Destroyed = 3; 
         
-        private double requestTime; // زمان درخواست ماشین
-        private double startTime;   // زمان شروع به کار ماشین
-        private double destroyTime; // زمان ازادسازی ماشین
+        private double requestTime;
+        private double startTime;  
+        private double destroyTime;
         private double lifeTime;
         private int tier;
 
-        int configurationType;    // پیکربندی ماشین (مثل: micro,small, medium, large)
+        int configurationType;  
         /* Resered On-Demand or Spot */
          int purchaseType; // Resered On-Demand or Spot
-         double price; // قیمت  پایه 
-        double bill; // صورتحساب ماشین 
+         double price;
+        double bill; 
         double delayInStartUp;
 //    end
 	/** The id. */

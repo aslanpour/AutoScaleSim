@@ -141,7 +141,7 @@ public class ExecutorSuperProfessional extends Executor{
                     getVmsQuarantinedList().remove(VmList.getById(getVmsQuarantinedList(), quarantinedVmID));
                     
                 }else{ // (Solution 2) Create new Vm or (Solution 3) don't scale up
-                    if(remainedCoolDownTime < 0){
+                    if(remainedCoolDownTime < 0){//By default, if cooldown is 0 (inactive), remainedCoolDownTime is always -1
                         int onDemandVmCount = getVmsList(new int[]{Vm.Requested, Vm.Started, Vm.Quarantined}
                                                             ,new int[] {configurationType}
                                                             ,new int[]{purchaseType})
@@ -161,7 +161,7 @@ public class ExecutorSuperProfessional extends Executor{
                         
                             provisioning += requiredVms;
                             executorAction = AutoScaleSimTags.ACT_UP_NEW;
-                            remainedCoolDownTime = COOLDOWN * AutoScaleSimTags.aMinute;
+                            remainedCoolDownTime = COOLDOWN;
                         }
                         
                     }else{
@@ -224,6 +224,7 @@ public class ExecutorSuperProfessional extends Executor{
                         }else{
                             Log.printLine("error- Vm Selection  - did not select a vm");
                             errorChecker = true;
+                            error+="error- Vm Selection  - did not select a vm";
                         }
                     }
                 }else{ // there is not condidate Vm

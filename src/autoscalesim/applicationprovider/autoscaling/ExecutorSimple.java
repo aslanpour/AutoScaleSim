@@ -88,7 +88,7 @@ public class ExecutorSimple extends Executor{
         
             // Scale Up
             if(commandPerTier == AutoScaleSimTags.PLANNER_SCALING_UP){
-                if(remainedCoolDownTime < 0){
+                if(remainedCoolDownTime < 0){ //By default, if cooldown is 0 (inactive), remainedCoolDownTime is always -1
                     int onDemandVmCount = getOnDemandVmsList(new int[]{Vm.Requested, Vm.Started}
                             ,new int[] {AutoScaleSimTags.VM_CONFIG_T2MICRO, AutoScaleSimTags.VM_CONFIG_T2SMALL,
                                         AutoScaleSimTags.VM_CONFIG_T2MEDIUM, AutoScaleSimTags.VM_CONFIG_T2LARGE}).size();
@@ -107,7 +107,7 @@ public class ExecutorSimple extends Executor{
                         
                         provisioning += requiredVms;
                         executorAction = AutoScaleSimTags.ACT_UP_NEW;
-                        remainedCoolDownTime = COOLDOWN * AutoScaleSimTags.aMinute;
+                        remainedCoolDownTime = COOLDOWN;
                         
                     }
                     
@@ -151,7 +151,8 @@ public class ExecutorSimple extends Executor{
                                                         + " VM#" + surplusVM.getId() + " destroyed from started list");
                             }else{
                                 errorChecker = true;
-                                error = "error- Vm Selection  - selected Vm to be down is not requested or started";
+                                error += "error- Vm Selection  - selected Vm to be down is not requested or started";
+                                Log.printLine("error- Vm Selection  - selected Vm to be down is not requested or started");
                             }
                                 
                             
@@ -159,7 +160,7 @@ public class ExecutorSimple extends Executor{
                         }else{
                             Log.printLine("error- Vm Selection  - did not select a vm");
                             errorChecker = true;
-                            error = "error- Vm Selection  - did not select a vm";
+                            error+= "error- Vm Selection  - did not select a vm";
                         }
                     }
                       
