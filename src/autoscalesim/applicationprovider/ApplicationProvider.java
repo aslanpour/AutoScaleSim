@@ -43,6 +43,10 @@ import autoscalesim.applicationprovider.loadmanager.LoadAdmission;
 import autoscalesim.applicationprovider.autoscaling.Executor;
 import autoscalesim.applicationprovider.autoscaling.Planner;
 import autoscalesim.applicationprovider.loadmanager.LoadBalancing;
+import autoscalesim.enduser.EndUserEmulator;
+import static autoscalesim.enduser.EndUserEmulator.MAX_CLOUDLET_LENGTH;
+import static autoscalesim.enduser.EndUserEmulator.MIN_CLOUDLET_LENGTH;
+import autoscalesim.log.AutoScaleSimTags.DATASET;
 import static autoscalesim.log.AutoScaleSimTags.oneTab;
 import static autoscalesim.log.AutoScaleSimTags.twoTabs;
 import autoscalesim.log.ExperimentalResult;
@@ -69,7 +73,7 @@ public class ApplicationProvider extends SimEntity {
         LoadBalancing loadBalancing;
         public static int cloudletCancelledCounterAck = 0;
     /* Auto-Scaling parameters */
-        protected int vmsCountInStart;
+        public static int vmsCountInStart;
         public static int scalingInterval;
     /* Monitor phase */
         public static Monitor monitor;
@@ -129,6 +133,7 @@ public class ApplicationProvider extends SimEntity {
         // End user information
         public static boolean IsFutureCloudlet;
         public static int lastCloudletReceivedId;
+        public static DATASET datasetType;
         
         // Cloudlet lists
         public static List<? extends Cloudlet> cloudletReceivedList;
@@ -158,6 +163,7 @@ public class ApplicationProvider extends SimEntity {
          */
         public ApplicationProvider(String name,
                                         int reservedVMs,
+                                        DATASET datasetType,
                                         LoadAdmission loadAdmission,
                                         LoadBalancing loadBalancing,
                                         int cloudletSchedulerName,
@@ -196,7 +202,7 @@ public class ApplicationProvider extends SimEntity {
             // End-user History
             sumRequestsPerAllTier = 0;
             sumRequestsLengthPerTier = 0;
-            
+            this.datasetType = datasetType;
             /* Analyze phase */
             setAnalyzer(analyzer);
             
@@ -318,8 +324,8 @@ public class ApplicationProvider extends SimEntity {
          */
         protected void ASPStart(){
             int vms = vmsCountInStart;
-            int purchaseType = AutoScaleSimTags.VM_PURCHASE_RESERVED;
-            int configurationType = AutoScaleSimTags.VM_CONFIG_T2LARGE;
+            int purchaseType = AutoScaleSimTags.VM_PURCHASE_ON_DEMAND;
+            int configurationType = planner.getConfigurationType();
             int tier = AutoScaleSimTags.WEB_TIER;
             List<Vm> vmList;
             vmList = getExecutor().preparationReservedVmRequest(
@@ -849,11 +855,14 @@ public class ApplicationProvider extends SimEntity {
                 // Has already been set. 
             
             // Set Response Time
-            cloudlet.setResponseTime(CloudSim.clock() - cloudlet.getFirstSubmissionTime());
+            cloudlet.setResponseTime(CloudSim.clock() 
+                    - cloudlet.getFirstSubmissionTime()
+                    + networkDelay(cloudlet.getCloudletLength()));
             sumResponseTime+= cloudlet.getResponseTime();
             
             // Set Delay Time
-            double delayTime = cloudlet.getTotalWaitingTime(cloudletSchedulerName, vmMips, vmPEs);
+            double delayTime = cloudlet.getTotalWaitingTime(cloudletSchedulerName, vmMips, vmPEs)
+                        + networkDelay(cloudlet.getCloudletLength());
             if (delayTime == -0.0)
                 delayTime = 0.0;
             cloudlet.setDelayInFinishing(delayTime);
@@ -954,11 +963,14 @@ public class ApplicationProvider extends SimEntity {
                 Log.printLine("--cloudletReturn - cloudlet pes was bigger than vm pes");
             }
             // Set Response Time
-            failedCloudlet.setResponseTime(CloudSim.clock() - failedCloudlet.getFirstSubmissionTime());
+            failedCloudlet.setResponseTime(CloudSim.clock() 
+                    - failedCloudlet.getFirstSubmissionTime()
+                    + networkDelay(failedCloudlet.getCloudletLength()));
             sumResponseTime+= failedCloudlet.getResponseTime();
             
             // Set Delay Time
-            double delayTime = failedCloudlet.getTotalWaitingTime(cloudletSchedulerName, vmMips, vmPEs);
+            double delayTime = failedCloudlet.getTotalWaitingTime(cloudletSchedulerName, vmMips, vmPEs)
+                    + networkDelay(failedCloudlet.getCloudletLength());
             failedCloudlet.setDelayInFinishing(delayTime);
             sumDelayTime += delayTime;
 
@@ -983,6 +995,30 @@ public class ApplicationProvider extends SimEntity {
         }
         
         
+        /**
+         * This delay is calculated after receiving the cloudlet because: 
+         * a) this is a part of AutoScaleSim and one might miss it if we place it
+         * in the VM or cloud provider
+         * b) if this is in Vm side, the VM will be occupied for this cloudlet
+         * while this is completed.
+         * @param cloudletLength
+         * @return 
+         */
+        private double networkDelay(long cloudletLength){
+            double delay = 0;
+            if (datasetType.equals(DATASET.NASA)){
+                delay=0;
+            }else if (datasetType.equals(DATASET.WIKIPEDIA)){
+//                // bring between 0.1 and 0.9
+//                delay = (cloudletLength - MIN_CLOUDLET_LENGTH) / (MAX_CLOUDLET_LENGTH - MIN_CLOUDLET_LENGTH) * 0.8 + 0.1;
+//                //bring between 0.01 to 0.09
+//                delay = delay / (double)10;
+                // assuming that the bw is 1000kbps and the to millisecond
+                delay = cloudletLength / (double)1000 / (double)1000;
+            }
+            
+            return delay;
+        }
         /**
 	 * Process the return of a request for the characteristics of a PowerDatacenter.
 	 * 

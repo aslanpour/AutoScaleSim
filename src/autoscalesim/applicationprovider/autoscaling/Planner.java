@@ -28,20 +28,20 @@ public abstract class Planner {
     private int plannerStepSize;
     private int purchaseType;
     private int tierType;
-    private int configurationType;
+    public int configurationType;
     
     private ArrayList<PlannerHistory> historyList;
     
     /**
      * 
      */
-    public Planner(){
+    public Planner(int configurationType){
         // PlannerRuleBased's output - initialing output parameters related to final decision
         
         plannerDecision = AutoScaleSimTags.PLANNER_DO_NOTHING;
         plannerStepSize = 0;
         tierType = -1;
-        configurationType = -1;
+        this.configurationType = configurationType;
         
         setHistoryList(new ArrayList<PlannerHistory>());
     }

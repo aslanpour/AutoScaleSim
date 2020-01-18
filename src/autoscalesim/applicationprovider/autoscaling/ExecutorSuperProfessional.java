@@ -52,7 +52,8 @@ public class ExecutorSuperProfessional extends Executor{
                     final ExecutorType executorType,
                     final SurplusVMSelectionPolicy surplusVMSelectionPolicy,
                     int COOLDOWN,
-                    int onDemandVmLimit,
+                    int maxOnDemandVm,
+                    int minOnDemandVm,
                     String startUpDelayType,
                     double BASE_DELAY_IN_VM_START_UP){
         
@@ -61,7 +62,8 @@ public class ExecutorSuperProfessional extends Executor{
                      executorType,
                      surplusVMSelectionPolicy,
                      COOLDOWN,
-                     onDemandVmLimit,
+                     maxOnDemandVm,
+                     minOnDemandVm,
                      startUpDelayType,
                      BASE_DELAY_IN_VM_START_UP);
         
@@ -147,11 +149,11 @@ public class ExecutorSuperProfessional extends Executor{
                                                             ,new int[]{purchaseType})
                                                         .size();
                     
-                        if(onDemandVmCount >= onDemandVmLimit)
+                        if(onDemandVmCount >= getMaxOnDemandVm())
                             executorAction = AutoScaleSimTags.ACT_UP_LIMIT;
                         else{
-                            if (onDemandVmCount + requiredVms > onDemandVmLimit)
-                                requiredVms = onDemandVmLimit - onDemandVmCount;
+                            if (onDemandVmCount + requiredVms > getMaxOnDemandVm())
+                                requiredVms = getMaxOnDemandVm() - onDemandVmCount;
                         
                             scaleUpVmList = preparationOnDemandVmRequest(scaleUpVmList
                                                             ,requiredVms
@@ -177,12 +179,16 @@ public class ExecutorSuperProfessional extends Executor{
                                             ,new int[]{purchaseType});
                 
                 boolean isCondidateVm = !condidateVmList.isEmpty();
-                if(isCondidateVm == true){
+                 //if there are VMs and they are more than the min limitation
+                if(isCondidateVm == true && condidateVmList.size() > getMinOnDemandVm()){
                  // Choose condidate Vms to be destroy
                     // reducing scaling step, because of the lack of candidate vms
                     if(condidateVmList.size() < requiredVms){
                         requiredVms = condidateVmList.size();
                     }
+                    
+                    if(condidateVmList.size() - requiredVms < getMinOnDemandVm())
+                        requiredVms = condidateVmList.size()-getMinOnDemandVm();
                     
                     ArrayList<Integer> exceptList = new ArrayList<>();
                     for(int j = 0; j < requiredVms; j++){

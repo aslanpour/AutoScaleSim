@@ -54,7 +54,9 @@ public abstract class Executor {
     
     public int remainedCoolDownTime;
     
-    protected final int onDemandVmLimit;
+    private final int maxOnDemandVm;
+    private final int minOnDemandVm;
+    
     private final String startUpDelayType;
     private final double BASE_DELAY_IN_VM_START_UP;
     
@@ -73,7 +75,8 @@ public abstract class Executor {
                     final ExecutorType executorType,
                     final SurplusVMSelectionPolicy surplusVMSelectionPolicy,
                     int COOLDOWN,
-                    int onDemandVmLimit,
+                    int maxOnDemandVm,
+                    int minOnDemandVm,
                     String startUpDelayType,
                     double BASE_DELAY_IN_VM_START_UP){
         
@@ -96,7 +99,8 @@ public abstract class Executor {
         
         remainedCoolDownTime = -1;
         
-        this.onDemandVmLimit = onDemandVmLimit;
+        this.maxOnDemandVm = maxOnDemandVm;
+        this.minOnDemandVm = minOnDemandVm;
         this.startUpDelayType = startUpDelayType;
         this.BASE_DELAY_IN_VM_START_UP = BASE_DELAY_IN_VM_START_UP;
         
@@ -305,6 +309,16 @@ public abstract class Executor {
     protected void addToQuarantinedVMsUpdaterDetails(String details){
         this.quarantinedVMsUpdaterDetails += details;
     }
+
+    public int getMaxOnDemandVm() {
+        return maxOnDemandVm;
+    }
+
+    
+    public int getMinOnDemandVm() {
+        return minOnDemandVm;
+    }
+    
     
     /**
      * Gets the History of execution phase

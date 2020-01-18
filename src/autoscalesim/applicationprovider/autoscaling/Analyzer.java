@@ -133,8 +133,12 @@ public class Analyzer {
         // Set the latest monitored Cpu utilization item
         double parameter = tmpVmHistoryList.get(sizeVmHistory - 1).getCpuUtilizationByAllTier();
         // Set a list of monitored Cpu utilization
-        double parameterList[] = new double[timeWindow];
-        for(int i = 0; i< timeWindow;i++){
+        int window = timeWindow;
+        if (sizeVmHistory < window)
+            window = sizeVmHistory;
+        
+        double parameterList[] = new double[window];
+        for(int i = 0; i< window;i++){
             parameterList[i] = tmpVmHistoryList.get(sizeVmHistory - 1 - i).getCpuUtilizationByAllTier();
         }
         
@@ -188,8 +192,12 @@ public class Analyzer {
         // Set the latest monitored VM count item
         double parameter = tmpVmHistoryList.get(sizeVmHistory - 1).getVms();
         // Set a list of monitored VM count
-        double parameterList[] = new double[timeWindow];
-        for(int i = 0; i< timeWindow;i++){
+        int window = timeWindow;
+        if (sizeVmHistory < window)
+            window = sizeVmHistory;
+        
+        double parameterList[] = new double[window];
+        for(int i = 0; i< window;i++){
             parameterList[i] = tmpVmHistoryList.get(sizeVmHistory - 1 - i).getVms();
         }
         
@@ -243,8 +251,12 @@ public class Analyzer {
         // Set the latest monitored Throughout item
         double parameter = tmpVmHistoryList.get(sizeVmHistory - 1).getThroughputFinishedCloudletsAllTiers();
         // Set a list of monitored Throughout
-        double parameterList[] = new double[timeWindow];
-        for(int i = 0; i< timeWindow;i++){
+        int window = timeWindow;
+        if (sizeVmHistory < window)
+            window = sizeVmHistory;
+        
+        double parameterList[] = new double[window];
+        for(int i = 0; i< window;i++){
             parameterList[i] = tmpVmHistoryList.get(sizeVmHistory - 1 - i).getThroughputFinishedCloudletsAllTiers();
         }
         
@@ -298,8 +310,12 @@ public class Analyzer {
         // Set the latest monitored Response Time item
         double parameter = tmpSLAHistoryList.get(sizeSLAHistory - 1).getAvgResponseTimePerAllTiers();
         // Set a list of monitored Response Time
-        double parameterList[] = new double[timeWindow];
-        for(int i = 0; i< timeWindow;i++){
+        int window = timeWindow;
+        if (sizeSLAHistory < window)
+            window = sizeSLAHistory;
+        
+        double parameterList[] = new double[window];
+        for(int i = 0; i< window;i++){
             parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - 1 - i).getAvgResponseTimePerAllTiers();
         }
         
@@ -353,8 +369,12 @@ public class Analyzer {
         // Set the latest monitored Delay Time item
         double parameter = tmpSLAHistoryList.get(sizeSLAHistory - 1).getAvgDelayTimePerAllTiers();
         // Set a list of monitored Delay Time
-        double parameterList[] = new double[timeWindow];
-        for(int i = 0; i< timeWindow;i++){
+        int window = timeWindow;
+        if (sizeSLAHistory < window)
+            window = sizeSLAHistory;
+        
+        double parameterList[] = new double[window];
+        for(int i = 0; i< window;i++){
             parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - 1 - i).getAvgDelayTimePerAllTiers();
         }
         
@@ -408,8 +428,12 @@ public class Analyzer {
         // Set the latest monitored SLA Violation count item
         double parameter = tmpSLAHistoryList.get(sizeSLAHistory - 1).getSlavNumberByAllTier();
         // Set a list of monitored SLA Violation Count
-        double parameterList[] = new double[timeWindow];
-        for(int i = 0; i< timeWindow;i++){
+        int window = timeWindow;
+        if (sizeSLAHistory < window)
+            window = sizeSLAHistory;
+        
+        double parameterList[] = new double[window];
+        for(int i = 0; i< window;i++){
             parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - 1 - i).getSlavNumberByAllTier();
         }
         
@@ -464,8 +488,12 @@ public class Analyzer {
         // Set the latest monitored SLA Violation Percent item
         double parameter = tmpSLAHistoryList.get(sizeSLAHistory - 1).getSlavPercent();
         // Set a list of monitored SLA Violation Percent
-        double parameterList[] = new double[timeWindow];
-        for(int i = 0; i< timeWindow;i++){
+        int window = timeWindow;
+        if (sizeSLAHistory < window)
+            window = sizeSLAHistory;
+        
+        double parameterList[] = new double[window];
+        for(int i = 0; i< window;i++){
             parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - 1 - i).getSlavPercent();
         }
         
@@ -519,8 +547,12 @@ public class Analyzer {
         // Set the latest monitored SLA Violation Time item
         double parameter = tmpSLAHistoryList.get(sizeSLAHistory - 1).getSlavSecondByAlltier();
         // Set a list of monitored SLA Violation Time
-        double parameterList[] = new double[timeWindow];
-        for(int i = 0; i< timeWindow;i++){
+        int window = timeWindow;
+        if (sizeSLAHistory < window)
+            window = sizeSLAHistory;
+        
+        double parameterList[] = new double[window];
+        for(int i = 0; i< window;i++){
             parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - 1 - i).getSlavSecondByAlltier();
         }
         
@@ -575,8 +607,12 @@ public class Analyzer {
         // Set the latest monitored Failed Cloudlet item
         double parameter = tmpSLAHistoryList.get(sizeSLAHistory - 1).getCloudletFailedCounter();
         // Set a list of monitored Failed Cloudlet
-        double parameterList[] = new double[timeWindow];
-        for(int i = 0; i< timeWindow;i++){
+        int window = timeWindow;
+        if (sizeSLAHistory < window)
+            window = sizeSLAHistory;
+        
+        double parameterList[] = new double[window];
+        for(int i = 0; i< window;i++){
             parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - 1 - i).getCloudletFailedCounter();
         }
         
@@ -632,8 +668,12 @@ public class Analyzer {
         // Set the latest monitored Workload item
         double parameter = tmpEndUserHistoryList.get(sizeEndUserHistory - 1).getRequestsPerAllTier();
         // Set a list of monitored Workload
-        double parameterList[] = new double[timeWindow];
-        for(int i = 0; i< timeWindow;i++){
+        int window = timeWindow;
+        if (sizeEndUserHistory < window)
+            window = sizeEndUserHistory;
+        
+        double parameterList[] = new double[window];
+        for(int i = 0; i< window;i++){
             parameterList[i] = tmpEndUserHistoryList.get(sizeEndUserHistory - 1 - i).getRequestsPerAllTier();
         }
         

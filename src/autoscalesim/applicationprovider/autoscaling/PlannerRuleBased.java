@@ -38,6 +38,7 @@ public class PlannerRuleBased extends Planner{
     /**
      * 
      * @param rule
+     * @param configurationType
      * @param cpuScaleUpThreshold
      * @param cpuScaleDownThreshold
      * @param delayTimeMax
@@ -45,11 +46,12 @@ public class PlannerRuleBased extends Planner{
      */
     public PlannerRuleBased(
                             final ScalingRule rule,
+                            int configurationType,
                             double cpuScaleUpThreshold,
                             double cpuScaleDownThreshold,
                             double delayTimeMax,
                             double delayTimeMin){
-        super();
+        super(configurationType);
         
         this.rule = rule;
         this.cpuScaleUpThreshold = cpuScaleUpThreshold;
@@ -67,7 +69,7 @@ public class PlannerRuleBased extends Planner{
         setPlannerStepsize(1);
         setPurchaseType(AutoScaleSimTags.VM_PURCHASE_ON_DEMAND);
         setTierType(AutoScaleSimTags.WEB_TIER);
-        setConfigurationType(AutoScaleSimTags.VM_CONFIG_T2MEDIUM);
+//        setConfigurationType(AutoScaleSimTags.VM_CONFIG_T2MEDIUM);
         
         /* Planner's Inputs - parameters ready to contribute to decision making */
         AnalyzerHistory analyzerHistory = getAnalyzer().latestHistoryRec();

@@ -55,7 +55,7 @@ public class AutoScaleSimTags {
         public final static int SpaceShared = 0;
         public final static int TimeShared = 1;
 
-        public static DecimalFormat dft = new DecimalFormat("#.##");
+        public static DecimalFormat dft = new DecimalFormat("#.###");
         // Planer Decisions
         public final static int PLANNER_DO_NOTHING   = 0;
         public final static int PLANNER_SCALING_UP   = 1;
@@ -184,13 +184,13 @@ public class AutoScaleSimTags {
         
         
         // Vm Price (Sydney, Linux)                            Micro, Small, Medium, Large
-        public final static double[] VM_PRICE_ONDEMAND       = { 0.02, 0.04, 0.08, 0.16};   // per hour
+        public final static double[] VM_PRICE_ONDEMAND       = { 0.01, 0.02, 0.04, 0.08};   // per hour
         public final static double[] VM_PRICE_RESERVED_1YEAR = { 128, 257, 515, 1030};      // 1 year term, All Upfront
         public static double[] VM_PRICE_SPOT           = { 0, 0, 0, 0};               // per hour
 
         // Vm details                             Micro, Small, Medium, Large
         public final static double [] VM_MIPS	= { 2500, 2500, 2500, 2500 };
-        public final static int[] VM_PES	= { 1, 1, 2, 2 }; // Number of CPUs
+        public final static int[] VM_PES	= { 1, 1, 2, 4 }; // Number of CPUs
         public final static int[] VM_RAM	= { 1024, 2048, 4096, 8192 }; //Vm memory (MB)
         public final static long VM_BW		= 100000; // 100 Mbit/s 
         public final static long VM_SIZE	= 2500; // 2.5 GB, image size (MB)
@@ -203,6 +203,11 @@ public class AutoScaleSimTags {
         public final static int APPLICATION_TIER = 1;
         public final static int DATABAE_TIER = 2;
        
+        //Dataset
+        public enum DATASET {
+            NASA,
+            WIKIPEDIA
+        }
         // Week Days
         public static final int MONDAY    = 1;                 // first day of week
         public static final int TUESDAY   = 2;
