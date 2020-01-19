@@ -43,7 +43,7 @@ import autoscalesim.applicationprovider.autoscaling.PlannerRuleBased;
 import autoscalesim.applicationprovider.autoscaling.Executor;
 import autoscalesim.applicationprovider.autoscaling.ExecutorSimple;
 import autoscalesim.applicationprovider.autoscaling.ExecutorSuperProfessional;
-import org.apache.poi.ss.formula.atp.AnalysisToolPak;
+import autoscalesim.log.AutoScaleSimTags.DATASET;
 
 /**
  * Experimental Setup class prepares all the three main entities of the simulation as 
@@ -66,18 +66,24 @@ public class ExperimentalSetup {
 
 /* (A) End-User Setting*/
             /* day(s) of simulation scenario (starts from 6th of July*/
-            final int SIMULATION_LIMIT = 7;   
-            /*NASA dataset regarding 28 days */
-            DataSet dataSet = DataSet.load("src//others//NASA_July.tset"); 
+            //for NASA----> [1-28] * 1440 min
+            // for Wikipedia----> [1-4] * 60 min
+            final int SIMULATION_LIMIT = 4 * 60;  //NASA=7*1440, Wikipdeia=4*60
+            //Dataset type
+            DATASET datasetType = DATASET.WIKIPEDIA;
+            
             /*The length (million instruction) of cloudlets */
+            //Note: the ratio of cloudlet length than VM mips should not be 
+            // more than cloudletTimeout times
             final int CLOUDLET_LENGTH = 5000;
             /* processing elemnts require for a cloudlet */
-            final int PES_NUMBER = 2;
+            final int PES_NUMBER = 1; //NASA=2, Wikipedia=1
             
             /* The time each cloudlet can be survived after being received by Application Provider*/
-            int cloudletTimeout= 30;
-            
-            
+            int cloudletTimeout= 50; //NASA=30, Wikipedia=50
+            // this is applicable only for Wikipedia workload
+            int minCloudletLength = 0;
+            int maxCloudletLength = 245000;
             
 //****************************************************************************************************************
 /* (B) Application Provider setting*/
@@ -89,10 +95,10 @@ public class ExperimentalSetup {
             
     /* Auto-Scaling setup */
             /* The number of initial VMs to host and run the application */
-           int initialVMs = 2; 
+           int initialVMs = 1; //NASA=2, Wikipedia=1
 
            /* The frequency of auto-scaling resources, in minute */
-            int scalingInterval = 3;  
+            int scalingInterval = 2; // NASA=10, Wikipedia = 2 
 
             /* Acceptable delay time for the execution of a cloudlet. 
             If a cloudlet delay time went beyond this value, an SLA violation has happened */
@@ -117,25 +123,26 @@ public class ExperimentalSetup {
                     
             /*Alpha in single exponential smoothing, each index is for one analyzing parameter,
             e.g., [0] is for CPU util. */
-            double sESAlpha[] = {0.2, 0, 0, 0, 0.2, 0, 0, 0, 0, 0}; 
+            double sESAlpha[] = {0.2, 0, 0, 0, 0.1, 0, 0, 0, 0, 0}; //NASA=0.2, Wikipedia=0.1
            
             //How many monitored items of a parameter should be used to analyze by complex methods?
-            int timeWindow = scalingInterval;  
+            int timeWindow = 5; //Wikipedia =5, NASA= scalingInterval 
             
             Analyzer analyzer = new Analyzer(analysisMethod, timeWindow, sESAlpha);
             
         /* Planner (resource estimation, capacity planning, or decision making) */
             /* As a Rule-Based planner containing some rules is implemented, */
-            final ScalingRule rule = ScalingRule.HYBRID;
-
+            final ScalingRule rule = ScalingRule.SLA_AWARE;
+            final int configurationType = AutoScaleSimTags.VM_CONFIG_T2SMALL; // NASA=medium, WIKIPEDIA=small
             /*Thresholds for some parameters */
             double cpuScaleUpThreshold = 70; // percentage      
-            double cpuScaleDownThreshold = 30; // percentage     
-            double delayTimeScaleUpThreshold = 1.0; // second               
-            double delayTimeScaleDownThreshold = 0.2;  // second               
+            double cpuScaleDownThreshold = 40; // percentage     
+            double delayTimeScaleUpThreshold = 0.140; // second //NASA=1, Wikipedia=0.140
+            double delayTimeScaleDownThreshold = 0.130;  // second // NASA=0.2, Wikipedia=0.130              
             
             Planner planner = new PlannerRuleBased(
                                             rule,
+                                            configurationType,
                                             cpuScaleUpThreshold,
                                             cpuScaleDownThreshold,
                                             delayTimeScaleUpThreshold,
@@ -143,15 +150,14 @@ public class ExperimentalSetup {
         /* Executor */
             final ExecutorType executorType = ExecutorType.SIMPLE;
                         
-            final SurplusVMSelectionPolicy surplusVMSelectionPolicy = SurplusVMSelectionPolicy.THE_OLDEST; //?????
-//            String surplusVMSelectionPolicy = "theOldest"; 
+            final SurplusVMSelectionPolicy surplusVMSelectionPolicy = SurplusVMSelectionPolicy.THE_OLDEST; 
             
             /* Cool-down time (in minute) to prevent executor from contradictory actions. */
             final int COOLDOWN = 0 * AutoScaleSimTags.aMinute;
             
             /* Max. On-Demand VM which Executor is allowed to provision. */
-            final int onDemandVmLimit = 40;
-            
+            final int maxOnDemandVm = 10; //NASA=40, Wikipedia=10
+            final int minOnDemandVm = 1;
             
           
             
@@ -167,13 +173,15 @@ public class ExperimentalSetup {
             String startUpDelayType = "Static"; 
             
             /* basic value for instantiaion delay time of VMs should be at least 1 minute */
-            final double BASE_DELAY_IN_VM_START_UP = 5 * AutoScaleSimTags.aMinute;
+            final double BASE_DELAY_IN_VM_START_UP = 1 * AutoScaleSimTags.aMinute; //NASA=5, Wikipedia=1
+            
             
             Executor executor = new ExecutorSimple(
                                             executorType,
                                             surplusVMSelectionPolicy,
                                             COOLDOWN,
-                                            onDemandVmLimit,
+                                            maxOnDemandVm,
+                                            minOnDemandVm,
                                             startUpDelayType,
                                             BASE_DELAY_IN_VM_START_UP);
                 
@@ -182,7 +190,8 @@ public class ExperimentalSetup {
                                                 executorType,
                                                 surplusVMSelectionPolicy,
                                                 COOLDOWN,
-                                                onDemandVmLimit,
+                                                maxOnDemandVm,
+                                                minOnDemandVm,
                                                 startUpDelayType,
                                                 BASE_DELAY_IN_VM_START_UP);
             }
@@ -196,7 +205,7 @@ public class ExperimentalSetup {
             // "ANALYZER"   which is the report of Analyzer results
             // "PLANNER"    which is the report of Planner results
             // "EXECUTOR"   which is the result of Executor results
-            final String[] reports = new String[]{"", "", "","", "", ""}; 
+            final String[] reports = new String[]{"M_VM", "M_User", "","", "", ""}; 
             
 
 //****************************************** Experimental Setup Finished *******************************
@@ -206,13 +215,16 @@ public class ExperimentalSetup {
             EndUserEmulator endUserEmulator = createEndUserEmulator(
                                         "EndUserEmulator",
                                         SIMULATION_LIMIT,
-                                        dataSet,
+                                        datasetType,
                                         CLOUDLET_LENGTH,
-                                        PES_NUMBER                                  
+                                        PES_NUMBER,
+                                        minCloudletLength,
+                                        maxCloudletLength
                                         );
             
             ApplicationProvider AP = createApplicationProvider("ApplicationProvider",
                                                         initialVMs,
+                                                        datasetType,
                                                         loadAdmission,
                                                         loadBalancing,
                                                         cloudletSchedulerName,
@@ -264,18 +276,22 @@ public class ExperimentalSetup {
      */
     private static EndUserEmulator createEndUserEmulator(String name,
                             final int SIMULATION_LIMIT,
-                            final DataSet dataSetAndDelayList,
+                            final DATASET dataset,
                             final int CLOUDLET_LENGTH,
-                            final int PES_NUMBER) throws Exception {
+                            final int PES_NUMBER,
+                            final int minCloudletLength,
+                            final int maxCloudletLength) throws Exception {
         
         EndUserEmulator endUserEmulator = null;
         
         try {
             endUserEmulator = new EndUserEmulator("EndUserEmulator",
-                                        SIMULATION_LIMIT * 1440,
-                                        dataSetAndDelayList,
+                                        SIMULATION_LIMIT,
+                                        dataset,
                                         CLOUDLET_LENGTH,
-                                        PES_NUMBER);
+                                        PES_NUMBER,
+                                        minCloudletLength,
+                                        maxCloudletLength);
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -303,6 +319,7 @@ public class ExperimentalSetup {
      */ 
     private static ApplicationProvider createApplicationProvider(String name,
                                                         int initialVMs,
+                                                        DATASET datasetType,
                                                         LoadAdmission loadAdmission,
                                                         LoadBalancing loadBalancing,
                                                         int cloudletSchedulerName,
@@ -318,6 +335,7 @@ public class ExperimentalSetup {
             try {
                 ASP = new ApplicationProvider("ApplicationProvider",
                                                     initialVMs,
+                                                    datasetType,
                                                     loadAdmission,
                                                     loadBalancing,
                                                     cloudletSchedulerName,
@@ -354,12 +372,12 @@ public class ExperimentalSetup {
             long[] storage = new long[hostCount] ; // storage capacity of each Host
             for(int i = 0; i < hostCount; i++){
                 pesList[i] = 2;
-                ram[i] = 10000;
-                bw[i] = 200000;
-                storage[i] = 1000000;
+                ram[i] = 100000;
+                bw[i] = 2000000;
+                storage[i] = 10000000;
             }
             
-            int mips = 2500;
+            int mips = 25000;
             
             //each data center can allocate 10 vms
             CloudProvider datacenter0 = createDatacenter("Datacenter_0", hostCount, pesList, mips,
