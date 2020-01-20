@@ -73,12 +73,12 @@ public class EndUserEmulator extends SimEntity{
         
         if(DATASET_TYPE == DATASET.NASA){
             /*NASA dataset regarding 28 days */
-            DataSet dataSet = DataSet.load("src//others//NASA_July.tset"); 
+            DataSet dataSet = DataSet.load("src//others//Dataset_NASA_July.tset"); 
             setDatasetNASA(dataSet);
             setDatasetWikipedia(null);
         }else if(DATASET_TYPE == DATASET.WIKIPEDIA){
             //read wikipedia
-            long [][] datasetWikipedia = readWikipediaCSVFile("src//others//", "dataset.csv", Boolean.FALSE);
+            long [][] datasetWikipedia = readWikipediaCSVFile("src//others//", "Dataset_Wikipedia_4hour.csv", Boolean.FALSE);
             setDatasetWikipedia(datasetWikipedia);
             setDatasetNASA(null);
         }
