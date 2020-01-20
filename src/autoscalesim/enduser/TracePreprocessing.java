@@ -29,7 +29,7 @@ public class TracePreprocessing {
 //        long[][] sortedDataset = sortBubbleWikipediaTrace(dataset);
         long[][] sortedDataset = sortQuickWikipediaTrace(dataset);
         
-        // write the sorted orkload to a CSV file
+        // write the sorted workload to a CSV file
         writeCSV(sortedDataset, "src/others/", "dataset.csv");
         
     }
