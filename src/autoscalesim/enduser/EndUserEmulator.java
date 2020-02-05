@@ -77,7 +77,7 @@ public class EndUserEmulator extends SimEntity{
             setDatasetNASA(dataSet);
             setDatasetWikipedia(null);
         }else if(DATASET_TYPE == DATASET.WIKIPEDIA){
-            //read wikipedia
+            //read wikipedia: contains timestamp, data size and response time for HTTP requests
             long [][] datasetWikipedia = readWikipediaCSVFile("src//others//", "Dataset_Wikipedia_4hour.csv", Boolean.FALSE);
             setDatasetWikipedia(datasetWikipedia);
             setDatasetNASA(null);

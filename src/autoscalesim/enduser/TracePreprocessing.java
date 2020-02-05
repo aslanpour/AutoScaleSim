@@ -15,7 +15,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import org.cloudbus.cloudsim.Log;
 /**
  *
@@ -23,6 +25,7 @@ import org.cloudbus.cloudsim.Log;
  */
 public class TracePreprocessing {
     public static void main(String[] args) throws IOException {
+        
         //read log file (timestamp, response time and data size)
         long[][] dataset = readLog("src/others/", "mylog_4h_800_100th_fix10vm.log");
         // sort the dataset based on timestamp
