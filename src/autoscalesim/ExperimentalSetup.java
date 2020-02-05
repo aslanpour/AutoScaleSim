@@ -83,7 +83,7 @@ public class ExperimentalSetup {
             int cloudletTimeout= 30; //NASA=30, Wikipedia=50
             // this is applicable only for Wikipedia workload
             int minCloudletLength = 0;
-            int maxCloudletLength = 245000;
+            int maxCloudletLength = 245000;//
             
 //****************************************************************************************************************
 /* (B) Application Provider setting*/
