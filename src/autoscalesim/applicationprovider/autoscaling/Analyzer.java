@@ -84,21 +84,21 @@ public class Analyzer {
 /* calculation of analysis parameters */
         
         // RESOURCE-AWARE
-        cpuUtilization = ANAL_CPUUtil(); 
-        vmCount = ANAL_VMCount();
-        throughput = ANAL_Throughput();
+        cpuUtilization = ANLZ_CPUUtil(); 
+        vmCount = ANLZ_VMCount();
+        throughput = ANLZL_Throughput();
         
         // SLA-AWARE
-        responseTime = ANAL_ResponseTime();
-        delayTime = ANAL_DelayTime();
+        responseTime = ANLZ_ResponseTime();
+        delayTime = ANLZ_DelayTime();
         
-        slavCount = ANAL_SLAVCount();
-        slavPercentage = ANAL_SLAVPercentage();
-        slavTime = ANAL_SLAVTime();
-        failedCloudlet = ANAL_FailedCloudlet();
+        slavCount = ANLZ_SLAVCount();
+        slavPercentage = ANLZ_SLAVPercentage();
+        slavTime = ANLZ_SLAVTime();
+        failedCloudlet = ANLZ_FailedCloudlet();
         
         // USER-BEHAVIOR-AWARE
-        futureWorkload = ANAL_FutureWorkload();
+        futureWorkload = ANLZ_FutureWorkload();
         
         // Environment-Aware
             // History class set these parameters itself.
@@ -125,7 +125,7 @@ public class Analyzer {
      * Analyzing CPU utilization
      * @return 
      */
-    private double ANAL_CPUUtil(){
+    private double ANLZ_CPUUtil(){
         double analyzedCPUUtilization = -1;
         // Get VM monitor history
         ArrayList<MonitorVmHistory> tmpVmHistoryList = getMonitor().getVmHistoryList();
@@ -184,7 +184,7 @@ public class Analyzer {
      * Analyzing VMs count
      * @return 
      */
-    private double ANAL_VMCount(){
+    private double ANLZ_VMCount(){
         double analyzedVmCount = -1;
         // Get VM monitor history
         ArrayList<MonitorVmHistory> tmpVmHistoryList = getMonitor().getVmHistoryList();
@@ -243,7 +243,7 @@ public class Analyzer {
      * Analyzing Throughput
      * @return 
      */
-    private double ANAL_Throughput(){
+    private double ANLZ_Throughput(){
         double analyzedThroughput = -1;
         // Get VM monitor history
         ArrayList<MonitorVmHistory> tmpVmHistoryList = getMonitor().getVmHistoryList();
@@ -301,7 +301,7 @@ public class Analyzer {
      * Analyzing Response Time
      * @return 
      */
-    private double ANAL_ResponseTime(){
+    private double ANLZ_ResponseTime(){
         double analyzedResponseTime = -1;
         
         // Get SLA monitor history
@@ -360,7 +360,7 @@ public class Analyzer {
      * Analyzing Delay Time
      * @return 
      */
-    private double ANAL_DelayTime(){
+    private double ANLZ_DelayTime(){
         double analyzedDelayTime = -1;
         
         // Get SLA monitor history
@@ -419,7 +419,7 @@ public class Analyzer {
      * Analyzing SLA violation count
      * @return 
      */
-    private double ANAL_SLAVCount(){
+    private double ANLZ_SLAVCount(){
         double analyzedSLAVCount = -1;
         
         // Get SLA monitor history
@@ -479,7 +479,7 @@ public class Analyzer {
      * Analyzing SLA violation percentage
      * @return 
      */
-    private double ANAL_SLAVPercentage(){
+    private double ANLZ_SLAVPercentage(){
         double analyzedSLAVPercentage = -1;
                       
         // Get SLA monitor history
@@ -538,7 +538,7 @@ public class Analyzer {
      * Analyzing SLA violation time (second)
      * @return 
      */
-    private double ANAL_SLAVTime(){
+    private double ANLZ_SLAVTime(){
         double analyzedSLAVTime = -1;
         
         // Get SLA monitor history
@@ -598,7 +598,7 @@ public class Analyzer {
      * Analyzing Failed cloudlets
      * @return 
      */
-    private double ANAL_FailedCloudlet(){
+    private double ANLZ_FailedCloudlet(){
         double analyzedFailedCloudlet = -1;
         
         // Get SLA monitor history
@@ -659,7 +659,7 @@ public class Analyzer {
      * Analyzing Workload
      * @return 
      */
-    private double ANAL_FutureWorkload(){
+    private double ANLZ_FutureWorkload(){
         double analyzedFutureWorkload = -1;
         
         // Get EndUser monitor history
