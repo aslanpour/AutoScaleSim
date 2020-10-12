@@ -86,7 +86,7 @@ public class Analyzer {
         // RESOURCE-AWARE
         cpuUtilization = ANLZ_CPUUtil(); 
         vmCount = ANLZ_VMCount();
-        throughput = ANLZL_Throughput();
+        throughput = ANLZ_Throughput();
         
         // SLA-AWARE
         responseTime = ANLZ_ResponseTime();
