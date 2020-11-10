@@ -110,16 +110,16 @@ public class ExperimentalSetup {
         /* Analyzer */
             // The method by which each parameter must be analyzed is set here:
             String[] analysisMethod = new String[]{
-                Method.SIMPLE.name(),//[0] method for analyzing 'CPU utilization' parameter
-                Method.SIMPLE.name(),//[1] method for analyzing 'Vm count' parameter
-                Method.SIMPLE.name(),//[2] method for analyzing 'Throughput' parameter
-                Method.SIMPLE.name(),//[3] method for analyzing 'Response Time' parameter
-                Method.SIMPLE.name(),//[4] method for analyzing 'Delay time' parameter
-                Method.SIMPLE.name(),//[5] method for analyzing 'SLA violation Count' parameter
-                Method.SIMPLE.name(),//[6] method for analyzing 'SLA violation percent parameter'
-                Method.SIMPLE.name(),//[7] method for analyzing 'SLA violation time' parameter
-                Method.SIMPLE.name(),//[8] method for analyzing 'Failed Cloudlets' parameter
-                Method.SIMPLE.name()};//[9] method for analyzing 'Future Workload' parameter
+                Method.COMPLEX_WMAfibo.name(),//[0] method for analyzing 'CPU utilization' parameter
+                Method.COMPLEX_WMAfibo.name(),//[1] method for analyzing 'Vm count' parameter
+                Method.COMPLEX_WMAfibo.name(),//[2] method for analyzing 'Throughput' parameter
+                Method.COMPLEX_WMAfibo.name(),//[3] method for analyzing 'Response Time' parameter
+                Method.COMPLEX_WMAfibo.name(),//[4] method for analyzing 'Delay time' parameter
+                Method.COMPLEX_WMAfibo.name(),//[5] method for analyzing 'SLA violation Count' parameter
+                Method.COMPLEX_WMAfibo.name(),//[6] method for analyzing 'SLA violation percent parameter'
+                Method.COMPLEX_WMAfibo.name(),//[7] method for analyzing 'SLA violation time' parameter
+                Method.COMPLEX_WMAfibo.name(),//[8] method for analyzing 'Failed Cloudlets' parameter
+                Method.COMPLEX_WMAfibo.name()};//[9] method for analyzing 'Future Workload' parameter
                     
             /*Alpha in single exponential smoothing, each index is for one analyzing parameter,
             e.g., [0] is for CPU util. */

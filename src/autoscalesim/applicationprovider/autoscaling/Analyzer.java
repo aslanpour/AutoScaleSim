@@ -86,7 +86,7 @@ public class Analyzer {
         // RESOURCE-AWARE
         cpuUtilization = ANLZ_CPUUtil(); 
         vmCount = ANLZ_VMCount();
-        throughput = ANLZL_Throughput();
+        throughput = ANLZ_Throughput();
         
         // SLA-AWARE
         responseTime = ANLZ_ResponseTime();
@@ -139,7 +139,7 @@ public class Analyzer {
         
         double parameterList[] = new double[window];
         for(int i = 0; i< window;i++){
-            parameterList[i] = tmpVmHistoryList.get(sizeVmHistory - 1 - i).getCpuUtilizationByAllTier();
+            parameterList[i] = tmpVmHistoryList.get(sizeVmHistory - (window-i)).getCpuUtilizationByAllTier();
         }
         
                      
@@ -198,7 +198,7 @@ public class Analyzer {
         
         double parameterList[] = new double[window];
         for(int i = 0; i< window;i++){
-            parameterList[i] = tmpVmHistoryList.get(sizeVmHistory - 1 - i).getVms();
+            parameterList[i] = tmpVmHistoryList.get(sizeVmHistory - (window-i)).getVms();
         }
         
                      
@@ -257,7 +257,7 @@ public class Analyzer {
         
         double parameterList[] = new double[window];
         for(int i = 0; i< window;i++){
-            parameterList[i] = tmpVmHistoryList.get(sizeVmHistory - 1 - i).getThroughputFinishedCloudletsAllTiers();
+            parameterList[i] = tmpVmHistoryList.get(sizeVmHistory - (window-i)).getThroughputFinishedCloudletsAllTiers();
         }
         
                      
@@ -316,7 +316,7 @@ public class Analyzer {
         
         double parameterList[] = new double[window];
         for(int i = 0; i< window;i++){
-            parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - 1 - i).getAvgResponseTimePerAllTiers();
+            parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - (window-i)).getAvgResponseTimePerAllTiers();
         }
         
                      
@@ -375,7 +375,7 @@ public class Analyzer {
         
         double parameterList[] = new double[window];
         for(int i = 0; i< window;i++){
-            parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - 1 - i).getAvgDelayTimePerAllTiers();
+            parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - (window-i)).getAvgDelayTimePerAllTiers();
         }
         
                      
@@ -434,7 +434,7 @@ public class Analyzer {
         
         double parameterList[] = new double[window];
         for(int i = 0; i< window;i++){
-            parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - 1 - i).getSlavNumberByAllTier();
+            parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - (window-i)).getSlavNumberByAllTier();
         }
         
                      
@@ -494,7 +494,7 @@ public class Analyzer {
         
         double parameterList[] = new double[window];
         for(int i = 0; i< window;i++){
-            parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - 1 - i).getSlavPercent();
+            parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - (window-i)).getSlavPercent();
         }
         
                      
@@ -553,7 +553,7 @@ public class Analyzer {
         
         double parameterList[] = new double[window];
         for(int i = 0; i< window;i++){
-            parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - 1 - i).getSlavSecondByAlltier();
+            parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - (window-i)).getSlavSecondByAlltier();
         }
         
                      
@@ -613,7 +613,7 @@ public class Analyzer {
         
         double parameterList[] = new double[window];
         for(int i = 0; i< window;i++){
-            parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - 1 - i).getCloudletFailedCounter();
+            parameterList[i] = tmpSLAHistoryList.get(sizeSLAHistory - (window-i)).getCloudletFailedCounter();
         }
         
                      
@@ -674,8 +674,11 @@ public class Analyzer {
         
         double parameterList[] = new double[window];
         for(int i = 0; i< window;i++){
-            parameterList[i] = tmpEndUserHistoryList.get(sizeEndUserHistory - 1 - i).getRequestsPerAllTier();
+//            parameterList[i] = tmpEndUserHistoryList.get(sizeEndUserHistory - 1 - i).getRequestsPerAllTier();
+            parameterList[i] = tmpEndUserHistoryList.get(sizeEndUserHistory - (window-i)).getRequestsPerAllTier();
+
         }
+
         
                      
         //Index 9 of AnalysisMethod variable indicates the analyzing method for analyzing 'Future Workload'    

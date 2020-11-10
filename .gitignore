@@ -1,3 +1,9 @@
 /dist/
 /nbproject/private/
 /build/
+out
+*.class
+*.xml
+*.iml
+*.properties
+*.csv
