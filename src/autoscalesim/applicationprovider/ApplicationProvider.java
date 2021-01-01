@@ -138,7 +138,7 @@ public class ApplicationProvider extends SimEntity {
         // Cloudlet lists
         public static List<? extends Cloudlet> cloudletReceivedList;
         public List<? extends Cloudlet> cloudletSentList;
-        public List<? extends Cloudlet> cloudletCompletedList;
+        public static List<? extends Cloudlet> cloudletCompletedList;
         public static List<? extends Cloudlet> cloudletCancelledList;
         public static List<? extends Cloudlet> cloudletFailedList;
         
@@ -1224,7 +1224,7 @@ public class ApplicationProvider extends SimEntity {
 	 * @return the cloudlet finished list
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends Cloudlet> List<T> getCloudletFinishedList() {
+	public static <T extends Cloudlet> List<T> getCloudletFinishedList() {
 		return (List<T>) cloudletCompletedList;
 	}
 

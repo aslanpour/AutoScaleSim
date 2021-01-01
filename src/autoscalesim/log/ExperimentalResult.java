@@ -16,6 +16,7 @@ import static autoscalesim.applicationprovider.ApplicationProvider.getExecutor;
 import static autoscalesim.applicationprovider.ApplicationProvider.getMonitor;
 import static autoscalesim.applicationprovider.ApplicationProvider.getPlanner;
 import static autoscalesim.applicationprovider.ApplicationProvider.lastCloudletReceivedId;
+import static autoscalesim.applicationprovider.ApplicationProvider.getCloudletFinishedList;
 import autoscalesim.applicationprovider.autoscaling.knowledgebase.AnalyzerHistory;
 import autoscalesim.applicationprovider.autoscaling.knowledgebase.ExecutorHistory;
 import autoscalesim.applicationprovider.autoscaling.knowledgebase.MonitorEndUserHistory;
@@ -27,7 +28,9 @@ import static autoscalesim.log.AutoScaleSimTags.dft;
 import static autoscalesim.log.AutoScaleSimTags.oneTab;
 import static autoscalesim.log.AutoScaleSimTags.twoTabs;
 import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
+import org.apache.commons.math3.util.MathUtils;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.core.CloudSim;
 import static org.cloudbus.cloudsim.lists.VmList.getOnDemandVmsList;
@@ -70,11 +73,11 @@ public class ExperimentalResult {
     /*Monitor */
             Log.printLine("" + (char)27 + "[34mMONITOR" + ":.............................");
         /* Vm Metric */
-            MonitorVmMetrics();
+            monitorVmMetrics();
             
         /* SLA Metric */
             Log.printLine(oneTab + "SLA Metrics: ...");
-            MonitorSLAMetrics();
+            monitorSLAMetrics();
         /* End user Metrics*/
             Log.print(oneTab + "End User Metrics: ...");
             monitorEndUserMetrics();
@@ -134,7 +137,7 @@ public class ExperimentalResult {
         /**
          * 
          */
-        private static void MonitorVmMetrics(){
+        private static void monitorVmMetrics(){
             Log.printLine(oneTab + "VM Metrics:");
             double totalUtilizationTmpAllTiers = 0;
             double totalCpuLoadTmpAllTiers = 0;
@@ -248,7 +251,7 @@ public class ExperimentalResult {
             Log.printLine();
         }
         
-        public static void MonitorSLAMetrics(){
+        public static void monitorSLAMetrics(){
             
             reportOfSLAResponseTime();
             reportSLADelayTime();
@@ -454,6 +457,8 @@ public class ExperimentalResult {
                     + "and Analyzed Delay time (Avg.): " + dft.format(delayTimePerTier) + "s " );
     }
     
+    public static double avgTimeToAdaptationSEC;
+    
     public static void plannerMetrics(){
             int scaleUpDec = 0; 
             int scaleDownDec = 0;
@@ -512,7 +517,7 @@ public class ExperimentalResult {
             
             // convert it from minute to second
             timeToAdaptation *= 60;
-            double avgTimeToAdaptationSEC = timeToAdaptation / scaleUpDec;
+            avgTimeToAdaptationSEC = timeToAdaptation / scaleUpDec;
             
             avgTimeToAdaptationMin = Math.floor(avgTimeToAdaptationSEC / AutoScaleSimTags.aMinute);
             double avg = (avgTimeToAdaptationSEC % AutoScaleSimTags.aMinute);
@@ -529,6 +534,10 @@ public class ExperimentalResult {
         int provisionedVm = 0; 
         int deProvisionedVm = 0;
         int contradictoryAction = 0;
+        double scaleUpPrecisions = 0;
+        double scaleDownPrecisions = 0;
+        double overprovisioned = 0;
+        double underprovisioned = 0;
         
         for(int i = 0; i < getExecutor().sizeHistory(); i++){
             ExecutorHistory executorHistory = getExecutor().getHistoryList().get(i);
@@ -560,8 +569,156 @@ public class ExperimentalResult {
             }
             
         }
+        
+        // Overprovidioned and Underprovisioned
+        int overPCount = 0;
+        int underPCount = 0;
+        int wellPCount = 0;
+        long overPAmount = 0;
+        long underPAmount = 0;
+        //Requests
+        
+        //???For Wikipedia length may varies
+        long cloudletLength = getCloudletFinishedList().get(0).getCloudletLength();
+        int cloudletPEs = getCloudletFinishedList().get(0).getNumberOfPes();
+        
+        //Resources
+        //VM configuration
+        
+        double vmMIPS = AutoScaleSimTags.VM_MIPS[getPlanner().getConfigurationType()];
+        int vmPEs = AutoScaleSimTags.VM_PES[getPlanner().getConfigurationType()]; 
+        // 
+        
+        int sizeHistory = getMonitor().getEndUserHistoryList().size();
+        for(int i = 0; i< sizeHistory; i++){
+            MonitorEndUserHistory endUserHistory = getMonitor().getEndUserHistoryList().get(i);
+            double reqAlltiers = endUserHistory.getRequestsPerAllTier();
+            MonitorVmHistory vmHistory = getMonitor().getVmHistoryList().get(i);
+            double vms = vmHistory.getVms();
+            //Load divided by resources per minute as Islam et al. Ali-Eldin 2016
+            double tmp = (reqAlltiers * cloudletPEs * cloudletLength) / (vms * vmPEs * vmMIPS * 60);
+            if(tmp < 1){//over provisioned
+                overPCount ++;
+                overPAmount += ((1- tmp) * ( vms * vmPEs * vmMIPS)); // amount of resources (MIPS) over provisioned
+            }else if (tmp > 1){// under provisioned
+                underPCount ++;
+                // sum of the sconds a VM (i.e., PE * MIPS) is surplus (over provisioning penalty)
+                underPAmount += (Math.abs(1- tmp) * ( vms * vmPEs * vmMIPS)); // amount of resources (MIPS) under provisioned
+            }else
+                wellPCount ++;
+        }
+        //Quantitative 
+        //over and under provisioning (penalties) metrics Islam et al. 2012 and Ali-Eldin et al. 2016
+        int overprovisionedCount = overPCount;
+        int underprovisionedCount = underPCount;
+        
+        overprovisioned = (overPCount / (double)sizeHistory) * 100;
+        underprovisioned = (underPCount / (double)sizeHistory) * 100;
+        
+        //Qualitative
+        //average precisions in VMs scale: Herbst et al. 2013 (the VM scale is from Al-Eldin 2016)
+        // The closer to zero the more precise. If more than zero, it shows how many VMs have been rusplus in case of scale down precision and homw many less than required in
+        //case of scale up precision
+        //Average Scale up Precisions means the sum of underprovisioned VMs divided by the duration of of the simulation
+        //Average Scale down Precisions means the sum of overprovisioned VMs divided by the duration of of the simulation
+        // The measured resource is turned into VM scale as Ali-Eldin 2016 suggested.
+        
+        scaleUpPrecisions = (underPAmount / (double)(vmPEs * vmMIPS))/sizeHistory;
+        // sum of overprovisioned resources devided by times
+        scaleDownPrecisions = (overPAmount / (double)(vmPEs * vmMIPS))/ sizeHistory;
+        
+        
+        
+        
+        //Elasticity Herbst et al. 2013
+        List<Integer> avgTimeToAvoidUnderProvisioning = new ArrayList<>();
+        List<Integer> avgTimeToAvoidOverProvisioning = new ArrayList<>();
+        
+        boolean underCheck = false;
+        boolean overCheck = false;
+        underPCount = 0;
+        overPCount = 0;
+        
+        for(int i = 0; i< sizeHistory; i++){
+            MonitorEndUserHistory endUserHistory = getMonitor().getEndUserHistoryList().get(i);
+            double reqAlltiers = endUserHistory.getRequestsPerAllTier();
+            MonitorVmHistory vmHistory = getMonitor().getVmHistoryList().get(i);
+            double vms = vmHistory.getVms();
+            //Load divided by resources per minute as Islam et al. Ali-Eldin 2016
+            double tmp = (reqAlltiers * cloudletPEs * cloudletLength) / (vms * vmPEs * vmMIPS * 60);
+            if(underCheck==false && overCheck==false){
+                if(tmp>1){//underprovisioned started
+                    underCheck=true;
+                    underPCount++;// 1 min in under pro
+                }else if(tmp<1){ //over provisioned started
+                    overCheck=true;
+                    overPCount++;
+                }
+            }else if (underCheck==true){//last min was under
+                if(tmp>1)//again under
+                    underPCount++;
+                else if (tmp<1){//switched to over
+                    underCheck=false;
+                    //add under to avg
+                    avgTimeToAvoidUnderProvisioning.add(underPCount);
+                    underPCount =0;
+                    overCheck=true;
+                    overPCount++;
+                }else{//is normal
+                    underCheck=false;
+                    // add under to avg
+                    avgTimeToAvoidUnderProvisioning.add(underPCount);
+                    underPCount=0;
+                }
+            }else if (overCheck==true){// last min was over
+                if(tmp<1)//again over
+                    overPCount++;
+                else if (tmp >1){//switched to under
+                    overCheck=false;
+                    //add over to avg
+                    avgTimeToAvoidOverProvisioning.add(overPCount);
+                    overPCount=0;
+                    underPCount++;
+                }else{//is normal
+                    overCheck=false;
+                    //add over to avg
+                    avgTimeToAvoidOverProvisioning.add(overPCount);
+                    overPCount=0;
+                }
+            }
+        }
+        int sumOver=0;
+        for(int i=0; i<avgTimeToAvoidOverProvisioning.size();i++){
+            sumOver+=avgTimeToAvoidOverProvisioning.get(i);
+        }
+        int sumUnder =0;
+        for(int i =0; i <avgTimeToAvoidUnderProvisioning.size();i++){
+            sumUnder+=avgTimeToAvoidUnderProvisioning.get(i);
+        }
+        //herbst 2013
+        //avg time to switch from under provisioned to others
+        double A_bar = sumUnder / (double)avgTimeToAvoidUnderProvisioning.size();
+        // avg time to switch from over provi to others
+        double B_bar = sumOver / (double)avgTimeToAvoidOverProvisioning.size();
+        // is the average amount of underprovisioned resources during an underprovisioned period.
+        double U_bar =underPAmount / (double)underprovisionedCount;
+        //is the average amount of overprovisioned resources during an overprovisioned period.
+        double O_bar = overPAmount / (double)overprovisionedCount;
+        
+        double upDenaminator = (double)(A_bar * U_bar);
+        double downDenaminator = (double)(B_bar * O_bar);
+        
+        double scaleUpElasticity = (1 / upDenaminator);
+        double scaleDownElasticity = (1 / downDenaminator);
+        
         Log.printLine(oneTab + "Provisioned On-Demand Vm:" + provisionedVm);
         Log.printLine(oneTab + "De-Provisioned On-Demand Vm:" + deProvisionedVm);
+        Log.printLine(oneTab + "Over-ovisioning %: " + dft.format(overprovisioned));
+        Log.printLine(oneTab + "Under-provisioning %: " + dft.format(underprovisioned));
+        Log.printLine(oneTab + "Scale Up Precision (VMs): " + dft.format(scaleUpPrecisions));
+        Log.printLine(oneTab + "Scale Down Precision (VMs): " + dft.format(scaleDownPrecisions));
+        //Log.printLine(oneTab + "Scale Up Elasticity: " + scaleUpElasticity);
+        //Log.printLine(oneTab + "Scale Down Elasticity: " + scaleDownElasticity);
         Log.printLine(oneTab + "Contradictory Scaling Actions: " + contradictoryAction);
         
         

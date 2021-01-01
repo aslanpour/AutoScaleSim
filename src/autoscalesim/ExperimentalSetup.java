@@ -33,8 +33,6 @@ import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
-import org.neuroph.core.NeuralNetwork;
-import org.neuroph.core.data.DataSet; 
 import autoscalesim.applicationprovider.loadmanager.LoadBalancingRoundRobin;
 import autoscalesim.applicationprovider.loadmanager.LoadBalancing;
 import autoscalesim.applicationprovider.autoscaling.Monitor;
@@ -43,6 +41,7 @@ import autoscalesim.applicationprovider.autoscaling.PlannerRuleBased;
 import autoscalesim.applicationprovider.autoscaling.Executor;
 import autoscalesim.applicationprovider.autoscaling.ExecutorSimple;
 import autoscalesim.applicationprovider.autoscaling.ExecutorSuperProfessional;
+import autoscalesim.applicationprovider.loadmanager.LoadBalancingRandom;
 import autoscalesim.log.AutoScaleSimTags.DATASET;
 
 /**
@@ -68,19 +67,20 @@ public class ExperimentalSetup {
             /* day(s) of simulation scenario (starts from 6th of July*/
             //for NASA----> [1-28] * 1440 min
             // for Wikipedia----> [1-4] * 60 min
-            final int SIMULATION_LIMIT = 7*1440;  //NASA=7*1440, Wikipdeia=4*60
-            //Dataset type
-            DATASET datasetType = DATASET.NASA;
+            final int SIMULATION_LIMIT = 4*60;  //NASA=7*1440, Wikipdeia=4*60
+            //Dataset type default NASA
+            DATASET datasetType = DATASET.WIKIPEDIA;
             
             /*The length (million instruction) of cloudlets */
             //Note: the ratio of cloudlet length than VM mips should not be 
             // more than cloudletTimeout times
             final int CLOUDLET_LENGTH = 5000;
+            
             /* processing elemnts require for a cloudlet */
-            final int PES_NUMBER = 2; //NASA=2, Wikipedia=1
+            final int PES_NUMBER = 1; //NASA=2, Wikipedia=1
             
             /* The time each cloudlet can be survived after being received by Application Provider*/
-            int cloudletTimeout= 30; //NASA=30, Wikipedia=50
+            int cloudletTimeout= 50; //NASA=30, Wikipedia=50
             // this is applicable only for Wikipedia workload
             int minCloudletLength = 0;
             int maxCloudletLength = 245000;//
@@ -90,15 +90,15 @@ public class ExperimentalSetup {
         
     /* Load Manager setup*/
             LoadAdmission loadAdmission = new LoadAdmission(); 
-            LoadBalancing loadBalancing = new LoadBalancingRoundRobin();
+            LoadBalancing loadBalancing = new LoadBalancingRoundRobin(); 
             int cloudletSchedulerName = AutoScaleSimTags.TimeShared; 
             
     /* Auto-Scaling setup */
             /* The number of initial VMs to host and run the application */
-           int initialVMs = 2; //NASA=2, Wikipedia=1
+           int initialVMs = 1; //NASA=2, Wikipedia=1
 
            /* The frequency of auto-scaling resources, in minute */
-            int scalingInterval = 10; // NASA=10, Wikipedia = 2 
+            int scalingInterval = 2; // NASA=10, Wikipedia = 2 
 
             /* Acceptable delay time for the execution of a cloudlet. 
             If a cloudlet delay time went beyond this value, an SLA violation has happened */
@@ -126,19 +126,19 @@ public class ExperimentalSetup {
             double sESAlpha[] = {0.2, 0, 0, 0, 0.1, 0, 0, 0, 0, 0}; //NASA=0.2, Wikipedia=0.1
            
             //How many monitored items of a parameter should be used to analyze by complex methods?
-            int timeWindow = scalingInterval; //Wikipedia =5, NASA= scalingInterval 
+            int timeWindow = 5; //Wikipedia =5, NASA= scalingInterval 
             
             Analyzer analyzer = new Analyzer(analysisMethod, timeWindow, sESAlpha);
             
         /* Planner (resource estimation, capacity planning, or decision making) */
             /* As a Rule-Based planner containing some rules is implemented, */
             final ScalingRule rule = ScalingRule.SLA_AWARE;
-            final int configurationType = AutoScaleSimTags.VM_CONFIG_T2MEDIUM; // NASA=medium, WIKIPEDIA=small
+            final int configurationType = AutoScaleSimTags.VM_CONFIG_T2SMALL; // NASA=medium, WIKIPEDIA=small
             /*Thresholds for some parameters */
             double cpuScaleUpThreshold = 70; // percentage      
             double cpuScaleDownThreshold = 40; // percentage     
-            double delayTimeScaleUpThreshold = 1; // second //NASA=1, Wikipedia=0.140
-            double delayTimeScaleDownThreshold = 0.2;  // second // NASA=0.2, Wikipedia=0.130              
+            double delayTimeScaleUpThreshold = 0.160; // second //NASA=1, Wikipedia=0.140
+            double delayTimeScaleDownThreshold = 0.110;  // second // NASA=0.2, Wikipedia=0.130              
             
             Planner planner = new PlannerRuleBased(
                                             rule,
@@ -148,15 +148,15 @@ public class ExperimentalSetup {
                                             delayTimeScaleUpThreshold,
                                             delayTimeScaleDownThreshold);
         /* Executor */
-            final ExecutorType executorType = ExecutorType.SIMPLE;
+            final ExecutorType executorType = ExecutorType.SIMPLE; //SIMPLE
                         
-            final SurplusVMSelectionPolicy surplusVMSelectionPolicy = SurplusVMSelectionPolicy.THE_OLDEST; 
+            final SurplusVMSelectionPolicy surplusVMSelectionPolicy = SurplusVMSelectionPolicy.THE_OLDEST; //THE_OLDEST
             
             /* Cool-down time (in minute) to prevent executor from contradictory actions. */
             final int COOLDOWN = 0 * AutoScaleSimTags.aMinute;
             
             /* Max. On-Demand VM which Executor is allowed to provision. */
-            final int maxOnDemandVm = 40; //NASA=40, Wikipedia=10
+            final int maxOnDemandVm = 10; //NASA=40, Wikipedia=10
             final int minOnDemandVm = 1;
             
           
@@ -173,7 +173,7 @@ public class ExperimentalSetup {
             String startUpDelayType = "Static"; 
             
             /* basic value for instantiaion delay time of VMs should be at least 1 minute */
-            final double BASE_DELAY_IN_VM_START_UP = 5 * AutoScaleSimTags.aMinute; //NASA=5, Wikipedia=1
+            final double BASE_DELAY_IN_VM_START_UP = 1 * AutoScaleSimTags.aMinute; //NASA=5, Wikipedia=1
             
             
             Executor executor = new ExecutorSimple(
@@ -205,7 +205,7 @@ public class ExperimentalSetup {
             // "ANALYZER"   which is the report of Analyzer results
             // "PLANNER"    which is the report of Planner results
             // "EXECUTOR"   which is the result of Executor results
-            final String[] reports = new String[]{"M_VM", "M_User", "","", "", ""}; 
+            final String[] reports = new String[]{"M_VM", "M_User", "M_SLA","", "", ""}; 
             
 
 //****************************************** Experimental Setup Finished *******************************
@@ -474,6 +474,7 @@ public class ExperimentalSetup {
         LAT_2Al; //   'Latency Two alarms' - Decision-making by latency (i.e., delay) */
     }
     
+        
     public enum ExecutorType {
         // Implemented Executors are as follows:
         SIMPLE, // Executes like Amazon EC2 executor

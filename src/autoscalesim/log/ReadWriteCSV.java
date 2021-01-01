@@ -21,6 +21,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import org.cloudbus.cloudsim.Log;
 
 /**
  *
@@ -111,7 +112,7 @@ public class ReadWriteCSV {
 
         try {
             fileWriter = new FileWriter(FILE_PATH + "Monitor_SLAHistory.csv");
-
+            
             //Write the CSV file header
             //CSV file header
             final String FILE_HEADER = "DayOfWeek,Hour,Minute,Response Time,Delay TIme,SLA Violation Number"
